@@ -1,0 +1,29 @@
+{
+    "name": "rbaaboud/datasafe",
+    "description": "Services to secure data by providing Crypt, Uncrypt and Checksum API",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ramzi Baaboud",
+            "email": "ramzi@baaboud.fr",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.6",
+        "ext-openssl": "*",
+        "sandrokeil/interop-config": "^1.0",
+        "phpunit/phpunit": "^5.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "": [
+                "./src",
+                "./tests"
+            ]
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit --colors=always tests/"
+    }
+}

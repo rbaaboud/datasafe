@@ -1,0 +1,66 @@
+<?php
+
+namespace Rbaaboud\DataSafe\Formatter;
+
+/**
+ * Trait FormatterTrait
+ *
+ * @package Rbaaboud\DataSafe\Formatter
+ */
+trait FormatterTrait
+{
+    /**
+     * Formatter
+     *
+     * @var \Rbaaboud\DataSafe\Formatter\FormatterInterface
+     */
+    protected $formatter;
+
+    /**
+     * Format value to crypt/uncrypt
+     *
+     * @param mixed $value
+     * @return string
+     * @throws \Rbaaboud\DataSafe\Exception
+     */
+    protected function format($value)
+    {
+        $formattedValue = null;
+
+        if (is_string($value) && $value === '') {
+            $formattedValue = $this->formatter->fromEmptyStirng($value);
+        } else if (is_string($value) && $value !== '') {
+            $formattedValue = $this->formatter->fromString($value);
+        } else if (is_integer($value)) {
+            $formattedValue = $this->formatter->fromInteger($value);
+        } else if (is_float($value)) {
+            $formattedValue = $this->formatter->fromFloat($value);
+        } else if (is_null($value)) {
+            $formattedValue = $this->formatter->fromNull($value);
+        } else if (is_bool($value)) {
+            $formattedValue = $this->formatter->fromBoolean($value);
+        } else if (is_array($value)) {
+            $formattedValue = '';
+
+            foreach ($value as $k => $v) {
+                $formattedValue .= $this->format($value);
+            }
+        } else {
+            throw new \Rbaaboud\DataSafe\Exception\Formatter(
+                'Failed to format value. ' .
+                'Given value must be a string, null, boolean or an array. ' .
+                'Given type: ' . var_export(gettype($value), true)
+            );
+        }
+
+        if (!is_string($formattedValue)) {
+            throw new \Rbaaboud\DataSafe\Exception\Formatter(
+                'Failed to format value. ' .
+                'Formatter must return a stirng. ' .
+                'Given returend type: ' . var_export(gettype($formattedValue), true)
+            );
+        }
+
+        return $formattedValue;
+    }
+}
