@@ -2,7 +2,7 @@
 
 Services to secure data by providing Crypt and Uncrypt API.
 
-## Installation
+## Install
 
 Via Composer
 
