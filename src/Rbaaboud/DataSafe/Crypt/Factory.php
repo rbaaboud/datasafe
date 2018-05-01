@@ -27,16 +27,16 @@ class Factory implements \Interop\Config\RequiresConfig, \Interop\Config\Require
             $formatter = new \Rbaaboud\DataSafe\Formatter();
         }
 
-        $crypt = new \Rbaaboud\DataSafe\Crypt($formatter);
+        $cryptInstance = new \Rbaaboud\DataSafe\Crypt($formatter);
 
-        $crypt->setMethod($config['method']);
-        $crypt->setKey($config['key']);
-        $crypt->setOptions($config['options']);
-        $crypt->setIv($config['iv']);
+        $cryptInstance->setMethod($config['method']);
+        $cryptInstance->setKey($config['key']);
+        $cryptInstance->setOptions($config['options']);
+        $cryptInstance->setIv($config['iv']);
 
-        $crypt->validateConfig();
+        $cryptInstance->validateConfig();
 
-        return $crypt;
+        return $cryptInstance;
     }
 
     /**

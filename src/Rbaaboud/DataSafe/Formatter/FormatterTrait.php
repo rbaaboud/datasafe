@@ -27,7 +27,13 @@ trait FormatterTrait
     {
         $formattedValue = null;
 
-        if (is_string($value) && $value === '') {
+        if (is_array($value)) {
+            $formattedValue = '';
+
+            foreach ($value as $k => $v) {
+                $formattedValue .= $this->format($value);
+            }
+        } else if (is_string($value) && $value === '') {
             $formattedValue = $this->formatter->fromEmptyStirng($value);
         } else if (is_string($value) && $value !== '') {
             $formattedValue = $this->formatter->fromString($value);
@@ -39,17 +45,11 @@ trait FormatterTrait
             $formattedValue = $this->formatter->fromNull($value);
         } else if (is_bool($value)) {
             $formattedValue = $this->formatter->fromBoolean($value);
-        } else if (is_array($value)) {
-            $formattedValue = '';
-
-            foreach ($value as $k => $v) {
-                $formattedValue .= $this->format($value);
-            }
         } else {
             throw new \Rbaaboud\DataSafe\Exception\Formatter(
                 'Failed to format value. ' .
-                'Given value must be a string, null, boolean or an array. ' .
-                'Given type: ' . var_export(gettype($value), true)
+                'Accepted value types: array, string, integer, float, null, boolean. ' .
+                'Given value type: ' . var_export(gettype($value), true)
             );
         }
 
@@ -57,7 +57,7 @@ trait FormatterTrait
             throw new \Rbaaboud\DataSafe\Exception\Formatter(
                 'Failed to format value. ' .
                 'Formatter must return a stirng. ' .
-                'Given returend type: ' . var_export(gettype($formattedValue), true)
+                'Given value type: ' . var_export(gettype($formattedValue), true)
             );
         }
 

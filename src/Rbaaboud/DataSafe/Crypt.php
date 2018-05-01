@@ -114,7 +114,7 @@ class Crypt
     public function uncryptArray(array $arrayDataToUncrypt, array $onlyFields = null)
     {
         if ($onlyFields === null) {
-            $onlyFields = array_keys($onlyFields);
+            $onlyFields = array_keys($arrayDataToUncrypt);
         }
 
         foreach ($onlyFields as $fieldName) {
@@ -129,26 +129,28 @@ class Crypt
     }
 
     /**
-     * Validation crypt configuration (method, iv length, ...)
+     * Validation crypt configuration (method, key, iv length)
      *
      * @return $this
-     * @throws \Rbaaboud\DataSafe\Exception
+     * @throws \Rbaaboud\DataSafe\Exception\Crypt\ValidateConfig
      */
     public function validateConfig()
     {
         $method = strtolower($this->getMethod());
 
         if (!in_array($method, openssl_get_cipher_methods())) {
-            throw new \Rbaaboud\DataSafe\Exception(
-                'Crypt method seems unknown. ' .
+            throw new \Rbaaboud\DataSafe\Exception\Crypt\ValidateConfig\UnknownMethod(
+                'Failed to validate config. ' .
+                'Crypt method seems unknown on this server. ' .
                 'See known methods by calling openssl_get_cipher_methods().'
             );
         }
 
-        $keyLength = strlen($this->getIv());
+        $keyLength = strlen($this->getKey());
         if ($keyLength === 0) {
-            throw new \Rbaaboud\DataSafe\Exception(
-                'Key length is empty.'
+            throw new \Rbaaboud\DataSafe\Exception\Crypt\ValidateConfig\EmptyKey(
+                'Failed to validate config. ' .
+                'Key is empty.'
             );
         }
 
@@ -156,7 +158,8 @@ class Crypt
         $expectedLength = openssl_cipher_iv_length($method);
 
         if ($ivLength !== $expectedLength) {
-            throw new \Rbaaboud\DataSafe\Exception(
+            throw new \Rbaaboud\DataSafe\Exception\Crypt\ValidateConfig\InvalidIvLength(
+                'Failed to validate config. ' .
                 'Iv length is not as expected for given crypt method. ' .
                 'actual: ' . var_export($ivLength, true) . ', ' .
                 'expected: ' . var_export($expectedLength, true) . '.'
