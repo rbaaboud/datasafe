@@ -7,7 +7,9 @@ Services to secure data by providing Crypt and Uncrypt API.
 Via Composer
 
 ``` bash
+
 $ composer require rbaaboud/datasafe
+
 ```
 
 ## Setup
@@ -15,11 +17,27 @@ $ composer require rbaaboud/datasafe
 __settings / app parameters__
 
 ```php
+
+<?php
+
 return [
-    'etai' => [
-        'sim' => []
+    'datasafe' => [
+        'crypt' => [
+            // method, see openssl_get_cipher_methods()
+            'method' => 'AES-256-CFB',
+            
+            // key, see openssl_encrypt()
+            'key' => 'vr6EkKQ8S8vuxnchzKJbmqPUbkm9mX5L',
+            
+            // options, see openssl_encrypt()
+            'options' => 0,
+            
+            // iv, see openssl_encrypt() and openssl_cipher_iv_length()
+            'iv' => 'cvXKhMvNk2LEYpG2'
+        ]
     ]
 ];
+
 ```
 
 __dependencies / services__
@@ -40,25 +58,13 @@ $container['datasafe'] = function (\Psr\Container\ContainerInterface $container)
     $factory = new \Rbaaboud\DataSafe\Crypt\Factory();
 
     // settings
-    $settings = [
-        // method, see openssl_get_cipher_methods()
-        'method' => 'AES-256-CFB',
-        
-        // key, see openssl_encrypt()
-        'key' => 'vr6EkKQ8S8vuxnchzKJbmqPUbkm9mX5L',
-        
-        // options, see openssl_encrypt()
-        'options' => 0,
-        
-        // iv, see openssl_encrypt() and openssl_cipher_iv_length()
-        'iv' => 'cvXKhMvNk2LEYpG2'
-    ];
+    $settingsService = $container->get('settings');
 
     // formatter
     // or a custom formatter that implements \Rbaaboud\DataSafe\Formatter\FormatterInterface
     $formatter = new \Rbaaboud\DataSafe\Formatter();
 
-    return $factory($settings, $formatter);
+    return $factory($settingsService['datasafe']['crypt'], $formatter);
 };
 
 ```
@@ -66,6 +72,7 @@ $container['datasafe'] = function (\Psr\Container\ContainerInterface $container)
 ## Usage
 
 ```php
+
 <?php
 
 // get datasafe service
@@ -119,5 +126,7 @@ $datasafeService->uncryptArray([
 ## Testing
 
 ```bash
+
 $ composer test
+
 ```
