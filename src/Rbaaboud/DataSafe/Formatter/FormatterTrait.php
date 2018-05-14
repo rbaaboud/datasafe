@@ -34,7 +34,7 @@ trait FormatterTrait
                 $formattedValue .= $this->format($value);
             }
         } else if (is_string($value) && $value === '') {
-            $formattedValue = $this->formatter->fromEmptyStirng($value);
+            $formattedValue = $this->formatter->fromEmptyString($value);
         } else if (is_string($value) && $value !== '') {
             $formattedValue = $this->formatter->fromString($value);
         } else if (is_integer($value)) {

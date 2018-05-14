@@ -23,7 +23,7 @@ interface FormatterInterface
      * @param string $value
      * @return string
      */
-    public function fromEmptyStirng($value);
+    public function fromEmptyString($value);
 
     /**
      * Format integer

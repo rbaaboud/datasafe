@@ -20,7 +20,7 @@ class Formatter implements \Rbaaboud\DataSafe\Formatter\FormatterInterface
     /**
      * @inheritdoc
      */
-    public function fromEmptyStirng($value)
+    public function fromEmptyString($value)
     {
         return '';
     }
